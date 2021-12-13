@@ -11,10 +11,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataJpaTest
-@ComponentScan(basePackages = {"com.springframework.jdbc.dao"})
 @ActiveProfiles("local")
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ComponentScan(basePackages = {"guru.springframework.jdbc.dao"})
 public class AuthorDaoIntegrationTest {
 
     @Autowired
