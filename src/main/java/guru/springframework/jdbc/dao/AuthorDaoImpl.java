@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class AuthorDaoImpl implements AuthorDao {
 
@@ -21,22 +23,31 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author getByName(String firstName, String lastName) {
-        return null;
+        return jdbcTemplate.queryForObject("SELECT * FROM author WHERE first_name = ? AND last_name = ?",
+                getRowMapper(), firstName, lastName);
     }
 
     @Override
     public Author saveNewAuthor(Author author) {
-        return null;
+        jdbcTemplate.update("INSERT INTO author (first_name, last_name) VALUES (?, ?)",
+                author.getFirstName(), author.getLastName());
+
+        Long createdId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+
+        return this.getById(createdId);
     }
 
     @Override
     public Author updateAuthor(Author saved) {
-        return null;
+        jdbcTemplate.update("UPDATE author SET first_name = ?, last_name = ? WHERE id = ?",
+                saved.getFirstName(), saved.getLastName(), saved.getId());
+
+        return this.getById(saved.getId());
     }
 
     @Override
     public void deleteAuthorById(Long id) {
-
+        jdbcTemplate.update("DELETE FROM author WHERE id = ?", id);
     }
 
     private RowMapper<Author> getRowMapper() {
